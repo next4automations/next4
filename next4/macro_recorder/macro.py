@@ -105,6 +105,22 @@ def on_press(key):
     })
     last_time = time.time()
 
+def on_scroll(x, y, dx, dy):
+    global last_time
+    if not recording:
+        return
+    if is_mouse_over_overlay(x, y):
+        return
+
+    delay = time.time() - last_time
+    actions.append({
+        "type": "scroll",
+        "dx": dx,
+        "dy": dy,
+        "delay": delay
+    })
+    last_time = time.time()
+
 # ===============================
 # OVERLAY
 # ===============================
@@ -147,7 +163,10 @@ def start_record():
     recording = True
     last_time = time.time()
 
-    mouse_listener = mouse.Listener(on_click=on_click)
+    mouse_listener = mouse.Listener(
+    on_click=on_click,
+    on_scroll=on_scroll)
+
     keyboard_listener = keyboard.Listener(on_press=on_press)
     mouse_listener.start()
     keyboard_listener.start()
@@ -206,6 +225,9 @@ def play_macro():
 
             if a["type"] == "click":
                 pyautogui.click(a["x"], a["y"])
+
+            elif a["type"] == "scroll":
+                pyautogui.scroll(a["dy"] * 100)
 
             elif a["type"] == "key":
                 key = a["key"].lower()
