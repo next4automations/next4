@@ -81,16 +81,8 @@ HOTKEYS = load_hotkeys()
 # CONFIG DE PASTA (persistente)
 # ===============================
 def save_config(path):
-    data = {}
-
-    if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-    data["macro_path"] = path
-
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
+        json.dump({"macro_path": path}, f)
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
@@ -331,16 +323,12 @@ def show_overlay():
     frame = ctk.CTkFrame(overlay, corner_radius=15)
     frame.pack(expand=True, fill="both", padx=10, pady=10)
 
-    # ... código anterior do frame ...
-
     ctk.CTkLabel(frame, text="🔴 Gravando", font=("Arial", 14, "bold")).pack(pady=(5, 8))
 
-    # AQUI MUDOU: Adicionei **ESTILO_BOTAO e ajustei a altura
-    ctk.CTkButton(frame, text="⏹️ Parar", command=stop_record, height=32, **ESTILO_BOTAO).pack(fill="x", pady=3)
-    ctk.CTkButton(frame, text="💾 Salvar", command=save_macro, height=32, **ESTILO_BOTAO).pack(fill="x", pady=3)
+    ctk.CTkButton(frame, text="⏹️ Parar", command=stop_record, height=28).pack(fill="x", pady=3)
+    ctk.CTkButton(frame, text="💾 Salvar", command=save_macro, height=28).pack(fill="x", pady=3)
 
     overlay.update_idletasks()
-    # ... resto do código ...
 
     w = overlay.winfo_width()
     h = overlay.winfo_height()
@@ -498,10 +486,10 @@ def editar_delay(event):
             pass
 
     ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
-def editar_delay_selecionado_acao(idx=None):
+def editar_delay_selecionado(idx=None):
     if idx is None:
         # Se não passou índice, tenta pegar o selecionado
-        idx = editar_delay_selecionado_acao()
+        idx = get_acao_selecionada()
     if idx is None or idx >= len(actions):
         status.configure(text="⚠️ Selecione uma ação")
         return
@@ -527,7 +515,7 @@ def editar_delay_selecionado_acao(idx=None):
     ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
 
 def remover_acao_selecionada():
-    idx = editar_delay_selecionado_acao()
+    idx = get_acao_selecionada()
     if idx is None or idx >= len(actions):
         status.configure(text="⚠️ Selecione uma ação")
         return
@@ -781,19 +769,6 @@ def choose_macro_folder():
 # ===============================
 # GUI PRINCIPAL
 # ===============================
-# --- CONFIGURAÇÃO DE ESTILO DOS BOTÕES (LILÁS) ---
-ESTILO_BOTAO = {
-    "corner_radius": 20,
-    "fg_color": "#9B59B6",      # Lilás
-    "hover_color": "#8E44AD",   # Lilás escuro
-    "font": ("Roboto", 14, "bold"),
-    "text_color": "white",
-    "border_width": 1,
-    "border_color": "white"
-}
-# -------------------------------------------------
-
-app = ctk.CTk() # Essa linha já existe no seu código
 # ===============================
 # GUI PRINCIPAL
 # ===============================
@@ -846,22 +821,25 @@ status.pack(pady=8)
 # ==============================
 # BLOCO DE GRAVAÇÃO
 # ===============================
-# ===============================
-# BLOCO DE GRAVAÇÃO
-# ===============================
 macro_name = ctk.CTkEntry(app, placeholder_text="Nome da macro")
 macro_name.pack(pady=6, fill="x", padx=40)
 
 record_frame = ctk.CTkFrame(app, fg_color="transparent")
 record_frame.pack(pady=4)
 
-# Botões Gravar e Salvar
-ctk.CTkButton(record_frame, text="🔴 Gravar", command=start_record, width=120, **ESTILO_BOTAO).pack(side="left", padx=6)
-ctk.CTkButton(record_frame, text="💾 Salvar", command=save_macro, width=120, **ESTILO_BOTAO).pack(side="left", padx=6)
+ctk.CTkButton(record_frame, text="🔴 Gravar", command=start_record, width=120).pack(side="left", padx=6)
+ctk.CTkButton(record_frame, text="💾 Salvar", command=save_macro, width=120).pack(side="left", padx=6)
+ctk.CTkLabel(
+    app,
+    text="🧠 Ações da Macro",
+    font=("Arial", 14, "bold")
+).pack(pady=(12, 4))
 
-ctk.CTkLabel(app, text="🧠 Ações da Macro", font=("Arial", 14, "bold")).pack(pady=(12, 4))
-
-actions_box = ctk.CTkTextbox(app, width=360, height=160)
+actions_box = ctk.CTkTextbox(
+    app,
+    width=360,
+    height=160
+)
 actions_box.bind("<Double-Button-1>", editar_delay)
 actions_box.bind("<Button-3>", remover_acao)
 actions_box.pack(pady=6)
@@ -869,23 +847,23 @@ actions_box.configure(state="disabled")
 
 actions_buttons = ctk.CTkFrame(app)
 actions_buttons.pack(pady=4)
-
-# Botões Editar e Remover Ação
-ctk.CTkButton(
+btn_edit = ctk.CTkButton(
     actions_buttons,
     text="✏️ Editar delay",
     width=160,
-    command=lambda: editar_delay_selecionado(),
-    **ESTILO_BOTAO
-).pack(side="left", padx=6)
+    command=lambda: editar_delay_selecionado()
+)
+btn_edit.pack(side="left", padx=6)
 
-ctk.CTkButton(
+btn_remove = ctk.CTkButton(
     actions_buttons,
     text="🗑 Remover ação",
     width=160,
-    command=lambda: remover_acao_selecionada(),
-    **ESTILO_BOTAO # Nota: Se quiser manter vermelho, remova esta linha e use fg_color="#a83232"
-).pack(side="left", padx=6)
+    fg_color="#a83232",
+    hover_color="#8f2a2a",
+    command=lambda: remover_acao_selecionada()
+)
+btn_remove.pack(side="left", padx=6)
 
 # ===============================
 # BLOCO DE MACROS
@@ -898,29 +876,23 @@ macro_select.pack(pady=4, fill="x", padx=40)
 macro_action_frame = ctk.CTkFrame(app, fg_color="transparent")
 macro_action_frame.pack(pady=6)
 
-# Botões Executar e Excluir Macro
 ctk.CTkButton(
     macro_action_frame,
     text="▶ Executar",
     command=play_macro,
-    width=120,
-    **ESTILO_BOTAO
+    width=120
 ).pack(side="left", padx=6)
 
 ctk.CTkButton(
     macro_action_frame,
     text="🗑 Excluir",
     command=delete_macro,
-    width=120,
-    **ESTILO_BOTAO
+    width=120
 ).pack(side="left", padx=6)
-
-# Botão Configurações
 ctk.CTkButton(
     app,
     text="⚙️ Configurações",
-    command=open_settings,
-    **ESTILO_BOTAO
+    command=open_settings
 ).pack(pady=6)
 
 # ===============================
@@ -929,9 +901,9 @@ ctk.CTkButton(
 ctk.CTkButton(
     app,
     text="📂 Pasta dos macros",
-    command=choose_macro_folder,
-    **ESTILO_BOTAO
+    command=choose_macro_folder
 ).pack(pady=10)
+
 # ===============================
 # ATALHOS (RESUMIDO)
 # ===============================
@@ -948,3 +920,4 @@ atualizar_label_atalhos()  # ✅ agora existe
 refresh_macros()
 keyboard.Listener(on_press=on_hotkey).start()
 app.mainloop()
+
