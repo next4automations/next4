@@ -178,6 +178,7 @@ def on_click(x, y, button, pressed):
         "delay": delay
     })
     last_time = time.time()
+    atualizar_lista_acoes()
 
 
 def on_press(key):
@@ -200,7 +201,7 @@ def on_press(key):
         "key": k,
         "delay": delay
     })
-
+    atualizar_lista_acoes()
     last_time = time.time()
 
 def atualizar_label_atalhos():
@@ -241,6 +242,7 @@ def on_abort(key):
         "delay": delay
     })
     last_time = time.time()
+    atualizar_lista_acoes()
     
 def on_release(key):
     global last_time
@@ -260,7 +262,7 @@ def on_release(key):
         "key": k,
         "delay": 0
     })
-
+    atualizar_lista_acoes()
 
 def on_scroll(x, y, dx, dy):
     global last_time
@@ -277,6 +279,7 @@ def on_scroll(x, y, dx, dy):
         "delay": delay
     })
     last_time = time.time()
+    atualizar_lista_acoes()
 
 # ===============================
 # OVERLAY
@@ -316,6 +319,7 @@ def start_record():
     show_overlay()
 
     actions.clear()
+    atualizar_lista_acoes()
     has_recorded = True
     recording = True
     last_time = time.time()
@@ -351,6 +355,47 @@ def stop_record():
     app.deiconify()
     status.configure(text="⏹️ Gravação parada")
 
+def atualizar_lista_acoes():
+    actions_box.configure(state="normal")
+    actions_box.delete("1.0", "end")
+
+    for i, a in enumerate(actions):
+        actions_box.insert("end", formatar_acao(a, i) + "\n")
+
+    actions_box.configure(state="disabled")
+
+def editar_delay(event):
+    index = int(actions_box.index(f"@{event.x},{event.y}").split(".")[0]) - 1
+    if index < 0 or index >= len(actions):
+        return
+
+    win = ctk.CTkToplevel(app)
+    win.title("Editar Delay")
+    win.geometry("220x120")
+    win.grab_set()
+
+    ctk.CTkLabel(win, text="Delay (segundos):").pack(pady=6)
+    entry = ctk.CTkEntry(win)
+    entry.insert(0, str(actions[index]["delay"]))
+    entry.pack(pady=4)
+
+    def salvar():
+        try:
+            actions[index]["delay"] = float(entry.get())
+            atualizar_lista_acoes()
+            win.destroy()
+        except:
+            pass
+
+    ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
+
+def remover_acao(event):
+    index = int(actions_box.index(f"@{event.x},{event.y}").split(".")[0]) - 1
+    if 0 <= index < len(actions):
+        del actions[index]
+        atualizar_lista_acoes()
+
+
 def save_macro():
     if not has_recorded:
         status.configure(text="⚠️ Nada para salvar")
@@ -368,6 +413,57 @@ def save_macro():
 
     refresh_macros()
     status.configure(text=f"💾 Macro '{name}' salva")
+    
+
+def formatar_acao(a, idx):
+    delay = f"⏱ {round(a['delay'], 2)}s"
+
+    if a["type"] == "click":
+        return f"{idx}. 🖱 Clique em ({a['x']}, {a['y']})  {delay}"
+
+    if a["type"] == "scroll":
+        direcao = "cima" if a["dy"] > 0 else "baixo"
+        return f"{idx}. 🧻 Scroll {direcao}  {delay}"
+
+    if a["type"] == "key_down":
+        return f"{idx}. ⌨️ Pressionou {a['key'].upper()}  {delay}"
+
+    if a["type"] == "key_up":
+        return f"{idx}. ⌨️ Soltou {a['key'].upper()}"
+
+play_overlay = None
+play_overlay_label = None
+
+def show_play_overlay(text):
+    global play_overlay, play_overlay_label
+
+    if not play_overlay:
+        play_overlay = ctk.CTkToplevel()
+        play_overlay.attributes("-topmost", True)
+        play_overlay.overrideredirect(True)
+
+        frame = ctk.CTkFrame(play_overlay, corner_radius=12)
+        frame.pack(expand=True, fill="both", padx=8, pady=8)
+
+        play_overlay_label = ctk.CTkLabel(
+            frame,
+            text="",
+            font=("Arial", 14, "bold")
+        )
+        play_overlay_label.pack(padx=10, pady=6)
+
+        play_overlay.update_idletasks()
+        w, h = 260, 50
+        x = play_overlay.winfo_screenwidth() // 2 - w // 2
+        y = 40
+        play_overlay.geometry(f"{w}x{h}+{x}+{y}")
+
+    play_overlay_label.configure(text=text)
+def hide_play_overlay():
+    global play_overlay
+    if play_overlay:
+        play_overlay.destroy()
+        play_overlay = None
 
 def play_macro():
     def run():
@@ -381,11 +477,13 @@ def play_macro():
         selected = macro_select.get()
         if not selected:
             app.after(0, lambda: status.configure(text="⚠️ Selecione uma macro"))
+            playing = False
             return
 
         path = os.path.join(MACRO_DIR, f"{selected}.json")
         if not os.path.exists(path):
             app.after(0, lambda: status.configure(text="❌ Macro não existe"))
+            playing = False
             return
 
         with open(path, encoding="utf-8") as f:
@@ -395,46 +493,68 @@ def play_macro():
             if not playing:
                 break
 
-            time.sleep(max(a["delay"], 0.03))
+            time.sleep(max(a.get("delay", 0), 0.03))
 
+            # ===============================
+            # MOUSE CLICK
+            # ===============================
             if a["type"] == "click":
+                show_play_overlay("🖱 Clique do mouse")
                 pyautogui.click(a["x"], a["y"])
 
+            # ===============================
+            # SCROLL
+            # ===============================
             elif a["type"] == "scroll":
+                direcao = "⬆️ Scroll" if a["dy"] > 0 else "⬇️ Scroll"
+                show_play_overlay(direcao)
                 pyautogui.scroll(a["dy"] * 100)
 
+            # ===============================
+            # KEY DOWN
+            # ===============================
             elif a["type"] == "key_down":
                 key = a["key"].lower()
                 mapped = KEY_MAP.get(key, key)
+
+                show_play_overlay(f"⌨️ {key.upper()} pressionada")
 
                 if key in MODIFIERS:
                     active_modifiers.add(key)
                     pyautogui.keyDown(mapped)
                 else:
                     if active_modifiers:
-                        # ATALHO
                         pyautogui.keyDown(mapped)
                     else:
-                        # TEXTO
                         pyautogui.press(mapped)
 
+            # ===============================
+            # KEY UP
+            # ===============================
             elif a["type"] == "key_up":
                 key = a["key"].lower()
                 mapped = KEY_MAP.get(key, key)
 
+                show_play_overlay(f"⌨️ {key.upper()} solta")
+
                 pyautogui.keyUp(mapped)
                 active_modifiers.discard(key)
 
+        # ===============================
+        # FINALIZAÇÃO
+        # ===============================
         playing = False
         abort_listener.stop()
+        hide_play_overlay()
 
-        # garante limpeza
+        # garante limpeza total
         for k in ["alt", "ctrl", "shift", "winleft"]:
             pyautogui.keyUp(k)
 
         app.after(0, lambda: status.configure(text="✅ Macro finalizada"))
 
     threading.Thread(target=run, daemon=True).start()
+
 def delete_macro():
     selected = macro_select.get()
     if not selected:
@@ -511,7 +631,7 @@ def open_settings():
     ctk.CTkButton(win, text="💾 Salvar", command=save).pack(pady=15)
 
 app = ctk.CTk()
-app.geometry("420x420")
+app.geometry("400x600")
 app.title("neXt4")
 
 status = ctk.CTkLabel(app, text="Pronto")
@@ -528,6 +648,20 @@ record_frame.pack(pady=4)
 
 ctk.CTkButton(record_frame, text="🔴 Gravar", command=start_record, width=120).pack(side="left", padx=6)
 ctk.CTkButton(record_frame, text="💾 Salvar", command=save_macro, width=120).pack(side="left", padx=6)
+ctk.CTkLabel(
+    app,
+    text="🧠 Ações da Macro",
+    font=("Arial", 14, "bold")
+).pack(pady=(12, 4))
+
+
+actions_box = ctk.CTkTextbox(
+    app,
+    width=360,
+    height=160
+)
+actions_box.pack(pady=6)
+actions_box.configure(state="disabled")
 
 # ===============================
 # BLOCO DE MACROS
