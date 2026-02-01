@@ -850,7 +850,7 @@ shortcuts = ctk.CTkLabel(
     justify="left"
 )
 shortcuts.pack(pady=10)
-
+#S
 atualizar_label_atalhos()  # ✅ agora existe
 
 refresh_macros()
