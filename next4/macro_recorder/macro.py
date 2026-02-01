@@ -81,8 +81,16 @@ HOTKEYS = load_hotkeys()
 # CONFIG DE PASTA (persistente)
 # ===============================
 def save_config(path):
+    data = {}
+
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+    data["macro_path"] = path
+
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
-        json.dump({"macro_path": path}, f)
+        json.dump(data, f, indent=4)
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
@@ -486,10 +494,10 @@ def editar_delay(event):
             pass
 
     ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
-def editar_delay_selecionado(idx=None):
+def editar_delay_selecionado_acao(idx=None):
     if idx is None:
         # Se não passou índice, tenta pegar o selecionado
-        idx = get_acao_selecionada()
+        idx = editar_delay_selecionado_acao()
     if idx is None or idx >= len(actions):
         status.configure(text="⚠️ Selecione uma ação")
         return
@@ -515,7 +523,7 @@ def editar_delay_selecionado(idx=None):
     ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
 
 def remover_acao_selecionada():
-    idx = get_acao_selecionada()
+    idx = editar_delay_selecionado_acao()
     if idx is None or idx >= len(actions):
         status.configure(text="⚠️ Selecione uma ação")
         return
