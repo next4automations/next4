@@ -846,7 +846,7 @@ macro_name.pack(pady=6, fill="x", padx=40)
 
 record_frame = ctk.CTkFrame(app, fg_color="transparent")
 record_frame.pack(pady=4)
-
+o
 # Botões Gravar e Salvar
 ctk.CTkButton(record_frame, text="🔴 Gravar", command=start_record, width=120, **ESTILO_BOTAO).pack(side="left", padx=6)
 ctk.CTkButton(record_frame, text="💾 Salvar", command=save_macro, width=120, **ESTILO_BOTAO).pack(side="left", padx=6)
@@ -940,4 +940,3 @@ atualizar_label_atalhos()  # ✅ agora existe
 refresh_macros()
 keyboard.Listener(on_press=on_hotkey).start()
 app.mainloop()
-
