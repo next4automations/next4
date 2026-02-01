@@ -1,0 +1,12 @@
+[
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 0.3678853511810303
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    }
+]
