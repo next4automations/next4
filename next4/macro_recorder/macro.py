@@ -818,7 +818,7 @@ app.title("neXt4")
 status = ctk.CTkLabel(app, text="Pronto")
 status.pack(pady=8)
 
-# ===============================
+# ==============================
 # BLOCO DE GRAVAÇÃO
 # ===============================
 macro_name = ctk.CTkEntry(app, placeholder_text="Nome da macro")
