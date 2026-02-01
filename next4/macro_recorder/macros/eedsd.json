@@ -1,0 +1,89 @@
+[
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 355,
+        "y": 365,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 1.7482733726501465
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 0.9899725914001465
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 0.7780735492706299
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "w",
+        "delay": 1.0710279941558838
+    },
+    {
+        "type": "key_up",
+        "key": "w",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "h",
+        "delay": 0.16994786262512207
+    },
+    {
+        "type": "key_up",
+        "key": "h",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "a",
+        "delay": 0.08508920669555664
+    },
+    {
+        "type": "key_up",
+        "key": "a",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "t",
+        "delay": 0.17697405815124512
+    },
+    {
+        "type": "key_up",
+        "key": "t",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "enter",
+        "delay": 0.38694071769714355
+    },
+    {
+        "type": "key_up",
+        "key": "enter",
+        "delay": 0
+    }
+]

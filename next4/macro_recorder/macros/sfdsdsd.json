@@ -1,0 +1,62 @@
+[
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 0.5525877475738525
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "e",
+        "delay": 1.0240859985351562
+    },
+    {
+        "type": "key_up",
+        "key": "e",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "d",
+        "delay": 0.1418752670288086
+    },
+    {
+        "type": "key_up",
+        "key": "d",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "d",
+        "delay": 0.15715622901916504
+    },
+    {
+        "type": "key_up",
+        "key": "d",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "e",
+        "delay": 0.10491824150085449
+    },
+    {
+        "type": "key_up",
+        "key": "e",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "d",
+        "delay": 0.1570901870727539
+    },
+    {
+        "type": "key_up",
+        "key": "d",
+        "delay": 0
+    }
+]
