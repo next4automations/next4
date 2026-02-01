@@ -387,19 +387,80 @@ def stop_record():
     status.configure(text="⏹️ Gravação parada")
 
 def atualizar_lista_acoes():
-    actions_box.configure(state="normal")
-    actions_box.delete("1.0", "end")
+    # Limpa tudo do frame
+    for widget in actions_box.winfo_children():
+        widget.destroy()
 
-    visivel_idx = 0
-    for a in actions:
-        # atualmente você ignora mouse_move
-        # if a["type"] == "mouse_move":
-        #     continue
+    for idx, a in enumerate(actions):
+        frame = ctk.CTkFrame(actions_box, corner_radius=8, fg_color="#2a2a2a")
+        frame.pack(fill="x", pady=2, padx=2)
 
-        actions_box.insert("end", formatar_acao(a, visivel_idx) + "\n")
-        visivel_idx += 1
+        # Label com a ação
+        label = ctk.CTkLabel(frame, text=formatar_acao(a, idx), anchor="w")
+        label.pack(side="left", padx=(6, 0), expand=True, fill="x")
 
-    actions_box.configure(state="disabled")
+        # Botão editar delay
+        btn_edit = ctk.CTkButton(
+            frame,
+            text="✏️",
+            width=30,
+            command=lambda i=idx: editar_delay_selecionado(i)
+        )
+        btn_edit.pack(side="left", padx=4)
+
+        # Botão remover ação
+        btn_remove = ctk.CTkButton(
+            frame,
+            text="🗑",
+            width=30,
+            fg_color="#a83232",
+            hover_color="#8f2a2a",
+            command=lambda i=idx: remover_acao_por_indice(i)
+        )
+        btn_remove.pack(side="left", padx=4)
+
+        # Botão adicionar ação
+        btn_add = ctk.CTkButton(
+            frame,
+            text="➕",
+            width=30,
+            command=lambda i=idx: adicionar_acao_apos(i)
+        )
+        btn_add.pack(side="left", padx=4)
+def editar_delay_selecionado(index):
+    a = actions[index]
+    win = ctk.CTkToplevel(app)
+    win.title("Editar Delay")
+    win.geometry("220x120")
+    win.grab_set()
+
+    ctk.CTkLabel(win, text="Delay (segundos):").pack(pady=6)
+    entry = ctk.CTkEntry(win)
+    entry.insert(0, str(a.get("delay", 0)))
+    entry.pack(pady=4)
+
+    def salvar():
+        try:
+            actions[index]["delay"] = float(entry.get())
+            atualizar_lista_acoes()
+            win.destroy()
+        except:
+            status.configure(text="❌ Valor inválido")
+
+    ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
+
+
+def remover_acao_por_indice(index):
+    if 0 <= index < len(actions):
+        actions.pop(index)
+        atualizar_lista_acoes()
+
+
+def adicionar_acao_apos(index):
+    # Cria ação vazia de exemplo
+    nova = {"type": "key_down", "key": "a", "delay": 0.5}
+    actions.insert(index + 1, nova)
+    atualizar_lista_acoes()
 
 
 def editar_delay(event):
@@ -425,8 +486,10 @@ def editar_delay(event):
             pass
 
     ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
-def editar_delay_selecionado():
-    idx = get_acao_selecionada()
+def editar_delay_selecionado(idx=None):
+    if idx is None:
+        # Se não passou índice, tenta pegar o selecionado
+        idx = get_acao_selecionada()
     if idx is None or idx >= len(actions):
         status.configure(text="⚠️ Selecione uma ação")
         return
@@ -438,7 +501,7 @@ def editar_delay_selecionado():
 
     ctk.CTkLabel(win, text="Delay (segundos):").pack(pady=6)
     entry = ctk.CTkEntry(win)
-    entry.insert(0, str(actions[idx]["delay"]))
+    entry.insert(0, str(actions[idx].get("delay", 0)))
     entry.pack(pady=4)
 
     def salvar():
@@ -450,6 +513,7 @@ def editar_delay_selecionado():
             status.configure(text="❌ Valor inválido")
 
     ctk.CTkButton(win, text="Salvar", command=salvar).pack(pady=8)
+
 def remover_acao_selecionada():
     idx = get_acao_selecionada()
     if idx is None or idx >= len(actions):
