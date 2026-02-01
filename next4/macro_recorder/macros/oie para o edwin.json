@@ -1,0 +1,251 @@
+[
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 378,
+        "y": 335,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 0.971632719039917
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "w",
+        "delay": 0.7283387184143066
+    },
+    {
+        "type": "key_up",
+        "key": "w",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "h",
+        "delay": 0.08839726448059082
+    },
+    {
+        "type": "key_up",
+        "key": "h",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "a",
+        "delay": 0.16750431060791016
+    },
+    {
+        "type": "key_up",
+        "key": "a",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "enter",
+        "delay": 0.743828535079956
+    },
+    {
+        "type": "key_up",
+        "key": "enter",
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 316,
+        "y": 134,
+        "delay": 2.0941247940063477
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 316,
+        "y": 134,
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 316,
+        "y": 127,
+        "delay": 0.8449063301086426
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 316,
+        "y": 127,
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 166,
+        "y": 126,
+        "delay": 1.747035264968872
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 166,
+        "y": 126,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "e",
+        "delay": 0.7541234493255615
+    },
+    {
+        "type": "key_up",
+        "key": "e",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "d",
+        "delay": 0.18416261672973633
+    },
+    {
+        "type": "key_up",
+        "key": "d",
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 196,
+        "y": 307,
+        "delay": 2.2777276039123535
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 196,
+        "y": 307,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "alt_l",
+        "delay": 1.1768765449523926
+    },
+    {
+        "type": "key_down",
+        "key": "f4",
+        "delay": 0.37587499618530273
+    },
+    {
+        "type": "key_up",
+        "key": "f4",
+        "delay": 0
+    },
+    {
+        "type": "key_up",
+        "key": "alt_l",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "enter",
+        "delay": 1.2961370944976807
+    },
+    {
+        "type": "key_up",
+        "key": "enter",
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 1424,
+        "y": 1055,
+        "delay": 5.028940200805664
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 1424,
+        "y": 1055,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "alt_l",
+        "delay": 0.7238855361938477
+    },
+    {
+        "type": "key_down",
+        "key": "f4",
+        "delay": 0.20796489715576172
+    },
+    {
+        "type": "key_up",
+        "key": "f4",
+        "delay": 0
+    },
+    {
+        "type": "key_up",
+        "key": "alt_l",
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 1123,
+        "y": 410,
+        "delay": 2.964029550552368
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 1123,
+        "y": 410,
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 971,
+        "y": 451,
+        "delay": 0.8910462856292725
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 971,
+        "y": 451,
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 1359,
+        "y": 1067,
+        "delay": 0.842003345489502
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 1362,
+        "y": 1067,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "enter",
+        "delay": 1.160020351409912
+    },
+    {
+        "type": "key_up",
+        "key": "enter",
+        "delay": 0
+    }
+]
