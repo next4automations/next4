@@ -1,3 +1,4 @@
+from core.macro_manager import MacroManager
 import time
 import json
 import threading
@@ -122,7 +123,7 @@ def on_hotkey(key):
 # ===============================
 # ESTADO
 # ===============================
-actions = []
+macro_manager = MacroManager()
 recording = False
 mouse_listener = None
 keyboard_listener = None
@@ -175,7 +176,7 @@ def on_click(x, y, button, pressed):
     btn = "left" if button == mouse.Button.left else "right"
 
     if pressed:
-        actions.append({
+        macro_manager.add_action({
             "type": "mouse_down",
             "button": btn,
             "x": x,
@@ -183,7 +184,7 @@ def on_click(x, y, button, pressed):
             "delay": delay
         })
     else:
-        actions.append({
+        macro_manager.add_action({
             "type": "mouse_up",
             "button": btn,
             "x": x,
@@ -211,7 +212,7 @@ def on_press(key):
         else:
             k = str(key).replace("Key.", "")
 
-    actions.append({
+    macro_manager.add_action({
         "type": "key_down",
         "key": k,
         "delay": delay
@@ -251,7 +252,7 @@ def on_abort(key):
     except:
         k = str(key).replace("Key.", "")
 
-    actions.append({
+    macro_manager.add_action({
         "type": "key",
         "key": k,
         "delay": delay
@@ -266,7 +267,7 @@ def on_move(x, y):
         return
 
     delay = time.time() - last_time
-    actions.append({
+    macro_manager.add_action({
         "type": "mouse_move",
         "x": x,
         "y": y,
@@ -286,7 +287,7 @@ def on_release(key):
         else:
             k = str(key).replace("Key.", "")
 
-    actions.append({
+    macro_manager.add_action({
         "type": "key_up",
         "key": k,
         "delay": 0
@@ -301,7 +302,7 @@ def on_scroll(x, y, dx, dy):
         return
 
     delay = time.time() - last_time
-    actions.append({
+    macro_manager.add_action({
         "type": "scroll",
         "dx": dx,
         "dy": dy,
@@ -342,12 +343,12 @@ def show_overlay():
 # CONTROLES
 # ===============================
 def start_record():
-    global recording, actions, last_time, mouse_listener, keyboard_listener, has_recorded
+    global recording, last_time, mouse_listener, keyboard_listener, has_recorded
 
     app.withdraw()
     show_overlay()
 
-    actions.clear()
+    macro_manager.clear_actions()
   
     has_recorded = True
     recording = True
@@ -391,7 +392,7 @@ def atualizar_lista_acoes():
     for widget in actions_box.winfo_children():
         widget.destroy()
 
-    for idx, a in enumerate(actions):
+    for idx, a in enumerate(macro_manager.get_actions()):
         frame = ctk.CTkFrame(actions_box, corner_radius=8, fg_color="#2a2a2a")
         frame.pack(fill="x", pady=2, padx=2)
 
@@ -428,7 +429,7 @@ def atualizar_lista_acoes():
         )
         btn_add.pack(side="left", padx=4)
 def editar_delay_selecionado(index):
-    a = actions[index]
+    a = macro_manager.get_actions()[index]
     win = ctk.CTkToplevel(app)
     win.title("Editar Delay")
     win.geometry("220x120")
@@ -441,7 +442,7 @@ def editar_delay_selecionado(index):
 
     def salvar():
         try:
-            actions[index]["delay"] = float(entry.get())
+            macro_manager.get_actions()[index]["delay"] = float(entry.get())
             atualizar_lista_acoes()
             win.destroy()
         except:
@@ -451,21 +452,21 @@ def editar_delay_selecionado(index):
 
 
 def remover_acao_por_indice(index):
-    if 0 <= index < len(actions):
-        actions.pop(index)
+    if 0 <= index < len(macro_manager.get_actions()):
+        macro_manager.get_actions().pop(index)
         atualizar_lista_acoes()
 
 
 def adicionar_acao_apos(index):
     # Cria ação vazia de exemplo
     nova = {"type": "key_down", "key": "a", "delay": 0.5}
-    actions.insert(index + 1, nova)
+    macro_manager.get_actions().insert(index + 1, nova)
     atualizar_lista_acoes()
 
 
 def editar_delay(event):
     index = int(actions_box.index(f"@{event.x},{event.y}").split(".")[0]) - 1
-    if index < 0 or index >= len(actions):
+    if index < 0 or index >= len(macro_manager.get_actions()):
         return
 
     win = ctk.CTkToplevel(app)
@@ -475,11 +476,11 @@ def editar_delay(event):
 
     ctk.CTkLabel(win, text="Delay (segundos):").pack(pady=6)
     entry = ctk.CTkEntry(win)
-    entry.insert(0, str(actions[index]["delay"]))
+    entry.insert(0, str(macro_manager.get_actions()[index]["delay"]))
     entry.pack(pady=4)
     def salvar():
         try:
-            actions[index]["delay"] = float(entry.get())
+            macro_manager.get_actions()[index]["delay"] = float(entry.get())
             atualizar_lista_acoes()
             win.destroy()
         except:
@@ -490,7 +491,7 @@ def editar_delay_selecionado(idx=None):
     if idx is None:
         # Se não passou índice, tenta pegar o selecionado
         idx = get_acao_selecionada()
-    if idx is None or idx >= len(actions):
+    if idx is None or idx >= len(macro_manager.get_actions()):
         status.configure(text="⚠️ Selecione uma ação")
         return
 
@@ -501,12 +502,12 @@ def editar_delay_selecionado(idx=None):
 
     ctk.CTkLabel(win, text="Delay (segundos):").pack(pady=6)
     entry = ctk.CTkEntry(win)
-    entry.insert(0, str(actions[idx].get("delay", 0)))
+    entry.insert(0, str(macro_manager.get_actions()[idx].get("delay", 0)))
     entry.pack(pady=4)
 
     def salvar():
         try:
-            actions[idx]["delay"] = float(entry.get())
+            macro_manager.get_actions()[idx]["delay"] = float(entry.get())
             atualizar_lista_acoes()
             win.destroy()
         except:
@@ -516,18 +517,18 @@ def editar_delay_selecionado(idx=None):
 
 def remover_acao_selecionada():
     idx = get_acao_selecionada()
-    if idx is None or idx >= len(actions):
+    if idx is None or idx >= len(macro_manager.get_actions()):
         status.configure(text="⚠️ Selecione uma ação")
         return
 
-    actions.pop(idx)
+    macro_manager.get_actions().pop(idx)
     atualizar_lista_acoes()
     status.configure(text="🗑 Ação removida")
 
 def remover_acao(event):
     index = int(actions_box.index(f"@{event.x},{event.y}").split(".")[0]) - 1
-    if 0 <= index < len(actions):
-        del actions[index]
+    if 0 <= index < len(macro_manager.get_actions()):
+        del macro_manager.get_actions()[index]
         atualizar_lista_acoes()
 
 
@@ -544,7 +545,7 @@ def save_macro():
     path = os.path.join(MACRO_DIR, f"{name}.json")
 
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(actions, f, indent=4)
+        json.dump(macro_manager.get_actions(), f, indent=4)
 
     refresh_macros()
     status.configure(text=f"💾 Macro '{name}' salva")
