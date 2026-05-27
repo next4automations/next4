@@ -1,0 +1,127 @@
+[
+    {
+        "type": "key_down",
+        "key": "win",
+        "delay": 2.5127134323120117
+    },
+    {
+        "type": "key_up",
+        "key": "win",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "w",
+        "delay": 2.9042656421661377
+    },
+    {
+        "type": "key_up",
+        "key": "w",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "h",
+        "delay": 0.11191368103027344
+    },
+    {
+        "type": "key_up",
+        "key": "h",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "a",
+        "delay": 2.768127918243408
+    },
+    {
+        "type": "key_up",
+        "key": "a",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "t",
+        "delay": 7.27189826965332
+    },
+    {
+        "type": "key_up",
+        "key": "t",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "s",
+        "delay": 0.12793946266174316
+    },
+    {
+        "type": "key_up",
+        "key": "s",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "enter",
+        "delay": 4.263943910598755
+    },
+    {
+        "type": "key_up",
+        "key": "enter",
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 448,
+        "y": 230,
+        "delay": 10.565056800842285
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 1482,
+        "y": 984,
+        "delay": 4.041856050491333
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 1482,
+        "y": 984,
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "o",
+        "delay": 0.7968571186065674
+    },
+    {
+        "type": "key_up",
+        "key": "o",
+        "delay": 0
+    },
+    {
+        "type": "key_down",
+        "key": "i",
+        "delay": 0.16005373001098633
+    },
+    {
+        "type": "key_up",
+        "key": "i",
+        "delay": 0
+    },
+    {
+        "type": "mouse_down",
+        "button": "left",
+        "x": 1883,
+        "y": 1000,
+        "delay": 2.000643491744995
+    },
+    {
+        "type": "mouse_up",
+        "button": "left",
+        "x": 1883,
+        "y": 1000,
+        "delay": 0
+    }
+]
